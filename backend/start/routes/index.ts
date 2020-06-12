@@ -2,6 +2,7 @@ import Route from '@ioc:Adonis/Core/Route';
 import HealthCheck from '@ioc:Adonis/Core/HealthCheck';
 
 import './users';
+import './tasks';
 
 Route.get('/', async () => {
   return { greetings: 'Welcome to TaskIt API!' };
