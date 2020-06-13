@@ -1,13 +1,27 @@
 {
-  "extends": [
-    "plugin:adonis/typescriptApp",
-    "plugin:prettier/recommended",
-    "prettier/@typescript-eslint"
-  ],
-  "plugins": [
-    "prettier"
-  ],
-  "rules":{
-    "prettier/prettier": "error"
-  }
+    "env": {
+        "commonjs": true,
+        "es2020": true,
+        "node": true
+    },
+    "extends": [
+        "airbnb-base",
+        "plugin:prettier/recommended"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 11
+    },
+    "rules": {
+      "no-param-reassign": "off",
+      "class-methods-use-this": "off",
+      "no-await-in-loop": "off",
+      "no-plusplus": "off",
+      "no-restricted-syntax": "off"
+    },
+    "globals": {
+      "use": true
+    }
 }
