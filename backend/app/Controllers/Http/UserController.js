@@ -1,14 +1,13 @@
+// const Env = use('Env')
+const Mail = use('Mail');
 const User = use('App/Models/User');
+const Database = use('Database');
 
 class UserController {
   async index({ response }) {
     try {
       const users = await User.all();
-
-      const usersJSON = users.toJSON().map(user => {
-        delete user.password;
-        return user;
-      });
+      const usersJSON = users.toJSON();
 
       return response.status(200).json(usersJSON);
     } catch (error) {
@@ -20,21 +19,31 @@ class UserController {
   }
 
   async create({ request, response }) {
+    const trx = await Database.beginTransaction();
     try {
       const { name, email, password } = request.body;
 
       const userData = { name, email, password };
 
-      const createdUser = await User.create(userData);
+      const createdUser = await User.create(userData, trx);
 
       const createdUserJSON = createdUser.toJSON();
       delete createdUserJSON.password;
 
+      await Mail.send('emails.welcome', createdUserJSON, message => {
+        message
+          .to(createdUserJSON.email)
+          .from('noreplay.taskit@gmail.com')
+          .subject('Bem vindo ao TaskIt!');
+      });
+
+      await trx.commit();
       return response.status(201).json({
         message: 'Usuário criado com sucesso! ',
         user: createdUserJSON,
       });
     } catch (error) {
+      await trx.rollback();
       return response.status(400).json({
         message: 'Não foi possível realizar esta operação. Tente novamente!',
         error,

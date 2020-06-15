@@ -19,7 +19,8 @@
       "class-methods-use-this": "off",
       "no-await-in-loop": "off",
       "no-plusplus": "off",
-      "no-restricted-syntax": "off"
+      "no-restricted-syntax": "off",
+      "global-require": "off"
     },
     "globals": {
       "use": true

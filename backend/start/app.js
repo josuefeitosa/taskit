@@ -14,6 +14,9 @@ const providers = [
   '@adonisjs/bodyparser/providers/BodyParserProvider',
   '@adonisjs/cors/providers/CorsProvider',
   '@adonisjs/lucid/providers/LucidProvider',
+  '@adonisjs/mail/providers/MailProvider',
+  '@adonisjs/framework/providers/ViewProvider',
+  '@rocketseat/adonis-bull/providers/Bull',
 ];
 
 /*
@@ -27,6 +30,7 @@ const providers = [
 */
 const aceProviders = [
   '@adonisjs/lucid/providers/MigrationsProvider',
+  '@rocketseat/adonis-bull/providers/Command',
 ];
 
 /*
@@ -54,5 +58,8 @@ const aliases = {};
 const commands = [];
 
 module.exports = {
-  providers, aceProviders, aliases, commands,
+  providers,
+  aceProviders,
+  aliases,
+  commands,
 };

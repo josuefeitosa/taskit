@@ -1,0 +1,16 @@
+<h3> Olá, {{ name }} ({{ email }}) </h3>
+<p>
+  Esse é o report diário de tarefas atribuídas à você que está <strong>Stand by</strong> ou <strong>Em andamento</strong>
+</p>
+<ul>
+  @each(task in tasks)
+    <li>
+      <p><strong>Tarefa:</strong>  {{ task.title }}</p>
+      <p><strong>Status:</strong>  {{ task.status }}</p>
+      <p><strong>Prazo:</strong>   {{ task.term }}</p>
+    </li>
+  @endeach
+</ul>
+<p>
+  <h5>TaskIt!</h5>
+</p>

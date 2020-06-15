@@ -1,5 +1,6 @@
 const User = use('App/Models/User');
 const Task = use('App/Models/Task');
+const Mail = use('Mail');
 const Database = use('Database');
 const moment = use('moment');
 
@@ -41,6 +42,7 @@ class TaskController {
   }
 
   async create({ request, response, auth }) {
+    const trx = await Database.beginTransaction();
     try {
       const ownerId = auth.user.id;
       const { title, term, teamMates, status } = request.body;
@@ -64,27 +66,45 @@ class TaskController {
         status,
       };
 
-      const createdTask = await Task.create(taskData);
+      const createdTask = await Task.create(taskData, trx);
       const createdTaskJSON = createdTask.toJSON();
 
-      await Database.from('task_users').insert({
+      await trx.from('task_users').insert({
         task_id: createdTaskJSON.id,
         user_id: ownerId,
       });
 
       for (const teamMate of teamMatesUsers) {
-        await Database.from('task_users').insert({
+        await trx.from('task_users').insert({
           task_id: createdTaskJSON.id,
           user_id: teamMate.id,
         });
+
+        const dataForEmail = {
+          name: teamMate.name,
+          email: teamMate.email,
+          owner: auth.user.name,
+          task: createdTaskJSON.title,
+          status: createdTaskJSON.status,
+          taskTerm: moment(createdTaskJSON).format('DD/MM/YYYY'),
+        };
+
+        await Mail.send('emails.newTask', dataForEmail, message => {
+          message
+            .to(teamMate.email)
+            .from('noreplay.taskit@gmail.com')
+            .subject('TaskIt - Nova tarefa para você!');
+        });
       }
 
+      await trx.commit();
       return response.status(201).json({
         message: 'Tarefa criada com sucesso!',
         task: createdTaskJSON,
         teamMates,
       });
     } catch (error) {
+      await trx.rollback();
       return response.status(400).json({
         message: 'Não foi possível realizar esta operação. Tente novamente!',
         error,
