@@ -1,0 +1,59 @@
+.background-container {
+  height: 100vh;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.dashboard-header {
+  position: sticky;
+  top: 0;
+  background-color: #F4F9FD;
+
+  max-width: 100%;
+  display: flex;
+  margin: 0 auto;
+
+  justify-content: space-between;
+  align-content: center;
+}
+
+.dashboard-title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  width: 200px;
+
+  line-height: 46px;
+
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.dashboard-title button {
+  height: 30px;
+
+  display: flex;
+}
+
+.dashboard-title-logout {
+  display: flex;
+  width: 50px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-title-logout a {
+  text-decoration: none;
+}
+
+.tasks-container {
+  margin-top: 150px;
+  margin-bottom: 250px;
+  padding-top: 0;
+}

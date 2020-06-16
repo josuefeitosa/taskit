@@ -10,61 +10,70 @@ import {
   Input,
   Button,
 } from 'reactstrap';
-import { FiLogIn } from 'react-icons/fi';
 
-import { useAuth } from '../../hooks/auth';
+import api from '../../services/api';
 import './styles.css';
 
-interface LoginForm {
+interface SignUpData {
+  name: string;
   email: string;
   password: string;
 }
 
-const SignIn: React.FC = () => {
-  const [loginData, setLoginData] = useState<LoginForm>({
+const SignUp: React.FC = () => {
+  const [signUpData, setSignUpData] = useState<SignUpData>({
+    name: '',
     email: '',
     password: '',
   });
 
-  const { signIn } = useAuth();
   const history = useHistory();
 
   const handleInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.currentTarget;
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = event.currentTarget;
       // console.log(name, value);
 
-      setLoginData({ ...loginData, [name]: value });
+      setSignUpData({ ...signUpData, [name]: value });
     },
-    [loginData],
+    [signUpData],
   );
 
-  // useEffect(() => {
-  //   console.log(loginData);
-  // }, [loginData]);
-
-  const handleLoginSubmit = useCallback(
+  const handleFormSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       try {
-        await signIn(loginData);
+        await api.post('/v1/users', signUpData);
 
-        history.push('/dashboard');
+        alert('Cadastro efetuado com sucesso!');
+
+        history.push('/');
       } catch (error) {
-        alert('Login falhou. Tente novamente!');
+        alert('Cadastro falhou. Tente novamente!');
       }
     },
-    [loginData, signIn, history],
+    [signUpData, history],
   );
 
   return (
     <Container className="background-container">
-      <Container className="login-container">
+      <Container className="signup-container">
         <h3>Bem vindo ao TaskIt!</h3>
-        <p>Faça seu logon em nossa plataforma</p>
+        <p>Faça seu cadastro em nossa plataforma</p>
 
-        <Form onSubmit={handleLoginSubmit}>
+        <Form onSubmit={handleFormSubmit}>
+          <FormGroup>
+            <label htmlFor="name">Nome</label>
+            <Input
+              className="form-control"
+              type="text"
+              id="name"
+              name="name"
+              value={signUpData.name}
+              onChange={handleInputChange}
+            />
+          </FormGroup>
           <FormGroup>
             <label htmlFor="email">Email</label>
             <Input
@@ -72,7 +81,7 @@ const SignIn: React.FC = () => {
               type="email"
               id="email"
               name="email"
-              value={loginData.email}
+              value={signUpData.email}
               onChange={handleInputChange}
             />
           </FormGroup>
@@ -83,21 +92,22 @@ const SignIn: React.FC = () => {
               type="password"
               id="password"
               name="password"
-              value={loginData.password}
+              value={signUpData.password}
               onChange={handleInputChange}
             />
           </FormGroup>
 
           <Button type="submit" color="primary">
-            Login
+            Cadastrar-se
           </Button>
         </Form>
-        <Link to="/signup">
-          <p>Faça seu cadastro</p>
+
+        <Link to="/">
+          <p>Voltar para login</p>
         </Link>
       </Container>
     </Container>
   );
 };
 
-export default SignIn;
+export default SignUp;

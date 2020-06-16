@@ -1,0 +1,13 @@
+.form-container {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  padding-top: 30px;
+
+  height: 550px;
+  max-height: 800px;
+  width: 450px !important;
+
+}

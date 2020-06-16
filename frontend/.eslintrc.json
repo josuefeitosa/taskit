@@ -41,7 +41,13 @@
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
     "no-unused-expressions": "off",
-    "@typescript-eslint/ban-types": "off"
+    "@typescript-eslint/ban-types": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "no-alert": "off",
+    "no-console": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "camelcase": "warn",
+    "radix": "off"
   },
   "settings": {
     "import/resolver": {
