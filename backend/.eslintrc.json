@@ -20,7 +20,8 @@
       "no-await-in-loop": "off",
       "no-plusplus": "off",
       "no-restricted-syntax": "off",
-      "global-require": "off"
+      "global-require": "off",
+      "camelcase": "off"
     },
     "globals": {
       "use": true

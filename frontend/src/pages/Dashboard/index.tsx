@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect, EventHandler } from 'react';
+import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 import { Container, Button, Modal, Table } from 'reactstrap';
 import { FiPlus, FiLogOut, FiEdit, FiTrash2 } from 'react-icons/fi';
@@ -113,7 +114,25 @@ const Dashboard: React.FC = () => {
     <>
       {modal && (
         <Modal isOpen={modal} toggle={toggleModal}>
-          {editing ? <EditTask /> : <AddTask users={users} />}
+          {editing ? (
+            currentTask && (
+              <EditTask
+                currentTask={{
+                  id: currentTask.id,
+                  term: moment(currentTask.term, 'DD/MM/YYYY').format(
+                    'YYYY-MM-DD',
+                  ),
+                  teamMates: currentTask.users,
+                  owner_id: currentTask.owner_id,
+                  status: currentTask.status,
+                  title: currentTask.title,
+                }}
+                users={users}
+              />
+            )
+          ) : (
+            <AddTask users={users} />
+          )}
         </Modal>
       )}
       <Container>
@@ -142,8 +161,8 @@ const Dashboard: React.FC = () => {
           </div>
         </header>
 
-        <Container>
-          <Table striped>
+        <Container className="dashboard-table-container">
+          <Table striped responsive styles={{ margin: '0 auto' }}>
             <thead>
               <tr>
                 <th scope="col">Tarefa</th>

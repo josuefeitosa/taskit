@@ -124,9 +124,27 @@ class TaskController {
       taskJSON.owner_id === userId;
 
     if (isUserInTask === true || isUserInTask >= 0) {
-      const data = request.all();
-      await task.merge(data);
-      await task.save();
+      const trx = await Database.beginTransaction();
+
+      // try {
+      const { title, term, status, owner_id, teamMates } = request.body;
+
+      await trx
+        .table('task_users')
+        .where({
+          task_id: task.id,
+        })
+        .delete();
+
+      for (const teamMate of teamMates) {
+        await trx.from('task_users').insert({
+          task_id: task.id,
+          user_id: teamMate,
+        });
+      }
+
+      await task.merge({ title, term, status, owner_id });
+      await task.save(trx);
 
       const updatedTask = task.toJSON();
 
@@ -137,9 +155,18 @@ class TaskController {
         delete user.updated_at;
       }
 
+      await trx.commit();
+
       return response
         .status(200)
         .json({ message: 'Tarefa alterada com sucesso!', task: updatedTask });
+      // } catch (error) {
+      //   await trx.rollback();
+      //   return response.status(400).json({
+      //     message: 'Não foi possível realizar esta operação. Tente novamente!',
+      //     error,
+      //   });
+      // }
     }
 
     return response.status(400).json({

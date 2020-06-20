@@ -46,8 +46,9 @@
     "no-alert": "off",
     "no-console": "off",
     "react/jsx-one-expression-per-line": "off",
-    "camelcase": "warn",
-    "radix": "off"
+    "camelcase": "off",
+    "radix": "off",
+    "react/jsx-curly-newline": "off"
   },
   "settings": {
     "import/resolver": {
