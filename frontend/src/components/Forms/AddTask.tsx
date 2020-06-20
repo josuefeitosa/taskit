@@ -188,6 +188,9 @@ const AddTask: React.FC<AddTaskProps> = ({ users }) => {
                 value={taskData.status}
                 onChange={handleAddTeamMate}
               >
+                <option key={99} value="">
+                  Selecione um usuário para adicioná-lo à tarefa
+                </option>
                 {users
                   .filter((user) => !taskData.teamMates.includes(user.id))
                   .map((user) => (

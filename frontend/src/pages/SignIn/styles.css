@@ -1,12 +1,9 @@
 .background-container {
-  height: 100vh;
-  padding-top: 15vh;
+  /* height: 100vh; */
 
   display: flex;
   flex: 1;
-  align-items: stretch;
-  justify-content: center;
-  align-content: center;
+  padding-top: 0 !important;
 }
 
 .login-container {
@@ -24,7 +21,6 @@
   border-radius: 5%;
   border-color: rgba(78, 77, 77, 0.4);
 }
-
 .login-container form {
   margin-top: 32px;
   padding-bottom: 15px;
@@ -37,11 +33,9 @@
 .login-container form input {
   max-width: 100%;
 }
-
 .login-container form button {
   margin-top: 20px;
 }
-
 .login-container a {
   flex-direction: row;
 }

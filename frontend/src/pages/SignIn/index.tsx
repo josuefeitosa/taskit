@@ -10,7 +10,6 @@ import {
   Input,
   Button,
 } from 'reactstrap';
-import { FiLogIn } from 'react-icons/fi';
 
 import { useAuth } from '../../hooks/auth';
 import './styles.css';

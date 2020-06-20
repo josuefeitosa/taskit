@@ -86,7 +86,7 @@ class TaskController {
           owner: auth.user.name,
           task: createdTaskJSON.title,
           status: createdTaskJSON.status,
-          taskTerm: moment(createdTaskJSON).format('DD/MM/YYYY'),
+          taskTerm: moment(createdTaskJSON.term).format('DD/MM/YYYY'),
         };
 
         await Mail.send('emails.newTask', dataForEmail, message => {
@@ -126,47 +126,86 @@ class TaskController {
     if (isUserInTask === true || isUserInTask >= 0) {
       const trx = await Database.beginTransaction();
 
-      // try {
-      const { title, term, status, owner_id, teamMates } = request.body;
+      try {
+        const { title, term, status, owner_id, teamMates } = request.body;
 
-      await trx
-        .table('task_users')
-        .where({
-          task_id: task.id,
-        })
-        .delete();
+        await trx
+          .table('task_users')
+          .where({
+            task_id: task.id,
+          })
+          .delete();
 
-      for (const teamMate of teamMates) {
-        await trx.from('task_users').insert({
-          task_id: task.id,
-          user_id: teamMate,
+        for (const teamMate of teamMates) {
+          await trx.from('task_users').insert({
+            task_id: task.id,
+            user_id: teamMate,
+          });
+
+          const indexExistingUser = task.users.findIndex(
+            user => user.id === teamMate,
+          );
+
+          const dataForEmail = {
+            name: teamMate.name,
+            email: teamMate.email,
+            owner: auth.user.name,
+            task: task.title,
+            status: task.status,
+            taskTerm: moment(task.term).format('DD/MM/YYYY'),
+          };
+
+          if (indexExistingUser < 0) {
+            await Mail.send('emails.newTask', dataForEmail, message => {
+              message
+                .to(teamMate.email)
+                .from('noreplay.taskit@gmail.com')
+                .subject('TaskIt - Nova tarefa para você!');
+            });
+          }
+        }
+
+        for (const deletedTeamMate of task.users) {
+          const dataForEmail = {
+            name: deletedTeamMate.name,
+            email: deletedTeamMate.email,
+            task: task.title,
+          };
+
+          if (teamMates.includes(deletedTeamMate.id)) {
+            await Mail.send('emails.removedFromTask', dataForEmail, message => {
+              message
+                .to(deletedTeamMate.email)
+                .from('noreplay.taskit@gmail.com')
+                .subject('TaskIt - Nova tarefa para você!');
+            });
+          }
+        }
+
+        await task.merge({ title, term, status, owner_id });
+        await task.save(trx);
+
+        const updatedTask = task.toJSON();
+
+        for (const user of updatedTask.users) {
+          delete user.password;
+          delete user.pivot;
+          delete user.created_at;
+          delete user.updated_at;
+        }
+
+        await trx.commit();
+
+        return response
+          .status(200)
+          .json({ message: 'Tarefa alterada com sucesso!', task: updatedTask });
+      } catch (error) {
+        await trx.rollback();
+        return response.status(400).json({
+          message: 'Não foi possível realizar esta operação. Tente novamente!',
+          error,
         });
       }
-
-      await task.merge({ title, term, status, owner_id });
-      await task.save(trx);
-
-      const updatedTask = task.toJSON();
-
-      for (const user of updatedTask.users) {
-        delete user.password;
-        delete user.pivot;
-        delete user.created_at;
-        delete user.updated_at;
-      }
-
-      await trx.commit();
-
-      return response
-        .status(200)
-        .json({ message: 'Tarefa alterada com sucesso!', task: updatedTask });
-      // } catch (error) {
-      //   await trx.rollback();
-      //   return response.status(400).json({
-      //     message: 'Não foi possível realizar esta operação. Tente novamente!',
-      //     error,
-      //   });
-      // }
     }
 
     return response.status(400).json({
