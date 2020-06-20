@@ -84,19 +84,19 @@ const Dashboard: React.FC = () => {
     async (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
       e.preventDefault();
 
-      window.confirm('Deseja mesmo deletar esta tarefa?');
+      if (window.confirm('Deseja mesmo deletar esta tarefa?')) {
+        const token = JSON.parse(
+          JSON.stringify(localStorage.getItem('@taskIt:token')),
+        );
 
-      const token = JSON.parse(
-        JSON.stringify(localStorage.getItem('@taskIt:token')),
-      );
+        await api.delete(`/v1/tasks/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      await api.delete(`/v1/tasks/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      history.push('/');
+        history.push('/');
+      }
     },
     [history],
   );

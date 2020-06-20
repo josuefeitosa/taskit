@@ -234,7 +234,7 @@ const EditTask: React.FC<EditTaskProps> = ({ users, currentTask }) => {
             </FormGroup>
 
             <Button type="submit" color="primary">
-              Criar
+              Atualizar
             </Button>
           </Form>
         </CardBody>

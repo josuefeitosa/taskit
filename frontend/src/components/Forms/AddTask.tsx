@@ -96,6 +96,8 @@ const AddTask: React.FC<AddTaskProps> = ({ users }) => {
         },
       });
 
+      alert('Tarefa criada com sucesso!');
+
       history.push('/');
     },
     [taskData, history],
