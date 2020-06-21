@@ -1,7 +1,7 @@
 version: "3.7"
 
 services:
-  db-postgres:
+  postgres:
     image: postgres
     environment: 
       POSTGRES_PASSWORD: docker
@@ -10,28 +10,37 @@ services:
       - "./pgdata:/var/lib/postgresql/data"
     ports: 
       - "5432:5432"
-  db-redis:
+    networks: 
+      - taskit
+
+  redis:
     build: "./backend/database/redis"
-    container_name: redis-container
     restart: always
     ports:
       - "6379:6379"
+    networks: 
+      - taskit
+
   backend:
     build: "./backend"
-    container_name: backend-container
     restart: always
     ports:
       - "3333:3333"
-    links:
-      - db-postgres
     depends_on: 
-      - db-postgres
-      - db-redis
+      - postgres
+      - redis
+    networks: 
+      - taskit
+    command: ["./wait-for-it.sh", "postgres:5432", "--", "adonis", "migration:run", "--", "yarn", "start"]
+
   frontend:
     build: "./frontend"
-    container_name: frontend-container
     restart: always
     ports:
       - "5000:5000"
     depends_on: 
       - backend
+    networks: 
+      - taskit
+networks: 
+  taskit: 

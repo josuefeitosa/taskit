@@ -12,6 +12,6 @@ COPY . .
 
 EXPOSE 3333
 
-RUN adonis migration:run
+# RUN adonis migration:run
 
 CMD ["yarn", "start"]
