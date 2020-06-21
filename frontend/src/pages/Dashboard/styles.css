@@ -21,6 +21,7 @@
   margin: 0 auto;
 
   justify-content: space-between;
+  align-items: baseline;
   align-content: center;
 }
 
@@ -34,7 +35,7 @@
   line-height: 46px;
 
   justify-content: space-between;
-  align-content: center;
+  align-content: base;
   align-items: center;
   vertical-align: middle;
 }
@@ -47,9 +48,10 @@
 
 .dashboard-title-logout {
   display: flex;
-  width: 50px;
+  width: 185px;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
+  align-content: center;
 }
 
 .dashboard-title-logout a {

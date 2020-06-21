@@ -149,7 +149,9 @@ const EditTask: React.FC<EditTaskProps> = ({ users, currentTask }) => {
     <Container className="form-container">
       <Card>
         <CardHeader>
-          <h3>Crie uma nova tarefa!</h3>
+          <h3>
+            Atualizar <u>{taskData.title}</u>
+          </h3>
         </CardHeader>
         <CardBody>
           <Form onSubmit={handleSubmit} className="form-div">
@@ -204,7 +206,7 @@ const EditTask: React.FC<EditTaskProps> = ({ users, currentTask }) => {
                   Selecione um usuário para adicioná-lo à tarefa
                 </option>
                 {users
-                  .filter((user) => !taskData.teamMates.includes(user.id))
+                  .filter((user) => !teamMates.includes(user.name))
                   .map((user) => (
                     <option key={user.id} value={user.id}>
                       {user.name}

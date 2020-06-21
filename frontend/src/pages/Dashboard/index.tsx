@@ -35,6 +35,15 @@ interface User {
 const Dashboard: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [signedUser] = useState(() => {
+    const storedSignedUser = localStorage.getItem('@taskIt:user');
+
+    if (storedSignedUser) return JSON.parse(storedSignedUser);
+
+    return {
+      name: 'N/A',
+    };
+  });
   const [currentTask, setCurrentTask] = useState<Task>();
   const [modal, setModal] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -74,10 +83,9 @@ const Dashboard: React.FC = () => {
   const history = useHistory();
 
   const handleLogout = useCallback(async () => {
+    await history.push('/');
     localStorage.removeItem('@taskIt:user');
     localStorage.removeItem('@taskIt:token');
-
-    history.push('/');
   }, [history]);
 
   const handleDelete = useCallback(
@@ -154,6 +162,7 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="dashboard-title-logout">
+            <p>Olá, {signedUser.name}</p>
             <a href="/" onClick={handleLogout}>
               {'Sair '}
               <FiLogOut />
