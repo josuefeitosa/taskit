@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+  db-postgres:
+    image: postgres
+    environment: 
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: taskit
+    volumes:
+      - "./pgdata:/var/lib/postgresql/data"
+    ports: 
+      - "5432:5432"
+  db-redis:
+    build: "./backend/database/redis"
+    container_name: redis-container
+    restart: always
+    ports:
+      - "6379:6379"
+  backend:
+    build: "./backend"
+    container_name: backend-container
+    restart: always
+    ports:
+      - "3333:3333"
+    links:
+      - db-postgres
+    depends_on: 
+      - db-postgres
+      - db-redis
+  frontend:
+    build: "./frontend"
+    container_name: frontend-container
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on: 
+      - backend

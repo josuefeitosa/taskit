@@ -1,0 +1,17 @@
+FROM node:14
+
+WORKDIR /usr/app
+
+COPY package*.json ./
+
+RUN yarn
+
+RUN npm i -g @adonisjs/cli
+
+COPY . .
+
+EXPOSE 3333
+
+RUN adonis migration:run
+
+CMD ["yarn", "start"]
