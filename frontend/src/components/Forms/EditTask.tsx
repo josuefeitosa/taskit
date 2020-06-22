@@ -45,7 +45,7 @@ interface User {
 const EditTask: React.FC<EditTaskProps> = ({ users, currentTask }) => {
   const [taskData, setTaskData] = useState<Task>(currentTask);
   const [teamMates, setTeamMates] = useState<string[]>([]);
-  const [ownerUser] = useState(() => {
+  const [loggedUser] = useState(() => {
     const storedUser = localStorage.getItem('@taskIt:user');
 
     if (storedUser) return JSON.parse(storedUser);
@@ -206,11 +206,11 @@ const EditTask: React.FC<EditTaskProps> = ({ users, currentTask }) => {
                   Selecione um usuário para adicioná-lo à tarefa
                 </option>
                 {users
-                  .filter((user) => !teamMates.includes(user.name))
+                  .filter((user) => !teamMates.includes(user.name) && user.id !== loggedUser.id)
                   .map((user) => (
                     <option key={user.id} value={user.id}>
                       {user.name}
-                      {user.id === ownerUser.id ? ' (criador da tarefa)' : ''}
+                      {user.id === loggedUser.id ? ' (criador da tarefa)' : ''}
                     </option>
                   ))}
               </Input>

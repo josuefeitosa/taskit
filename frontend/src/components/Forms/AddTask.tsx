@@ -197,7 +197,7 @@ const AddTask: React.FC<AddTaskProps> = ({ users }) => {
                   Selecione um usuário para adicioná-lo à tarefa
                 </option>
                 {users
-                  .filter((user) => !taskData.teamMates.includes(user.id))
+                  .filter((user) => !taskData.teamMates.includes(user.id) && user.id !== ownerUser.id)
                   .map((user) => (
                     <option key={user.id} value={user.id}>
                       {user.name}

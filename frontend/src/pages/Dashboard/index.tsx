@@ -164,7 +164,7 @@ const Dashboard: React.FC = () => {
           <div className="dashboard-title-logout">
             <p>Olá, {signedUser.name}</p>
             <a href="/" onClick={handleLogout}>
-              {'Sair '}
+              {' Sair '}
               <FiLogOut />
             </a>
           </div>
