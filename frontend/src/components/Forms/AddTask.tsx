@@ -86,19 +86,24 @@ const AddTask: React.FC<AddTaskProps> = ({ users }) => {
     async (e: FormEvent) => {
       e.preventDefault();
 
-      const token = JSON.parse(
-        JSON.stringify(localStorage.getItem('@taskIt:token')),
-      );
+      try {
+        const token = JSON.parse(
+          JSON.stringify(localStorage.getItem('@taskIt:token')),
+        );
 
-      await api.post('/v1/tasks', taskData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        await api.post('/v1/tasks', taskData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      alert('Tarefa criada com sucesso!');
+        alert('Tarefa criada com sucesso!');
 
-      history.push('/');
+        history.push('/');
+      } catch (error) {
+        console.log({error, taskData})
+      }
+
     },
     [taskData, history],
   );

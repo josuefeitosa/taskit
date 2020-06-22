@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3"
 
 services:
   postgres:
@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: docker
       POSTGRES_DB: taskit
     volumes:
-      - "./pgdata:/var/lib/postgresql/data"
+      - "./pg-data:/var/lib/postgresql/data"
     ports: 
       - "5432:5432"
     networks: 
@@ -31,16 +31,15 @@ services:
       - redis
     networks: 
       - taskit
-    command: ["./wait-for-it.sh", "postgres:5432", "--", "adonis", "migration:run", "--", "yarn", "start"]
+    command: ["yarn", "start"]
 
   frontend:
     build: "./frontend"
     restart: always
     ports:
       - "5000:5000"
-    depends_on: 
-      - backend
     networks: 
       - taskit
+  
 networks: 
-  taskit: 
+  taskit:

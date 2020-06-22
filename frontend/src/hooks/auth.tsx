@@ -38,7 +38,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     );
 
     const { token, user } = response.data;
-    console.log(response.data);
+    // console.log(response.data);
 
     localStorage.setItem('@taskIt:token', token.token);
     localStorage.setItem('@taskIt:user', JSON.stringify(user));

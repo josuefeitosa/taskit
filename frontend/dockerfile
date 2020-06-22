@@ -6,9 +6,11 @@ COPY package*.json ./
 
 RUN yarn
 
-RUN yarn global add serve
+COPY . .
 
-COPY build ./build
+RUN yarn build
+
+RUN yarn global add serve
 
 EXPOSE 5000
 
